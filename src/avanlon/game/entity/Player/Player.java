@@ -362,6 +362,7 @@ public class Player extends Entities
         while(this.exp >= this.baseExp)
         {
             this.exp -= this.baseExp;
+            public void statLevelUp();
         }
     }
     public void statLevelUp()
