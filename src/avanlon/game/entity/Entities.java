@@ -9,16 +9,16 @@ public class Entities
     protected int MPMax;
     protected int magDef;
     protected int baseMagDef;
-    protected int phyDef;
-    protected int basePhyDef;
+    protected int PhysicalDef;
+    protected int basePhysicalDef;
     protected int magAtt;
     protected int baseMagAtt;
-    protected int phyAtt;
-    protected int basePhyAtt;
+    protected int PhysicalAtt;
+    protected int basePhysicalAtt;
     protected int movSpeed;
     protected int baseMovSpeed;
 
-    public Entities(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int magAtt, int phyAtt)
+    public Entities(String name, int HP, int MP, int magDef, int PhysicalDef, int movSpeed, int magAtt, int PhysicalAtt)
     {
         this.name = name;
         this.HP = HP;

@@ -6,7 +6,7 @@ import avanlon.game.states.inventorystates.InvPotionMenu;
 
 import javax.swing.*;
 
-public class LaunchInvPotion 
+public class LaunchInvPotion
 {
     public static JFrame frame = new JFrame();
 
