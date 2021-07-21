@@ -9,12 +9,12 @@ public class Entities
     protected int MPMax;
     protected int magDef;
     protected int baseMagDef;
-    protected int PhysicalDef;
-    protected int basePhysicalDef;
+    protected int phyDef;
+    protected int basePhyDef;
     protected int magAtt;
     protected int baseMagAtt;
-    protected int PhysicalAtt;
-    protected int basePhysicalAtt;
+    protected int phyAtt;
+    protected int basePhyAtt;
     protected int movSpeed;
     protected int baseMovSpeed;
 
