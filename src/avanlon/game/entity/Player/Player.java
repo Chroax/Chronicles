@@ -49,7 +49,7 @@ public class Player extends Entities
         this.moveSpeedBuff = 0;
         this.crit = crit;
         this.baseCrit = crit;
-        this.gold = 50000;
+        this.gold = 100;
         this.exp = 0;
         this.pointSkill = 3;
         this.baseExp = 150;
