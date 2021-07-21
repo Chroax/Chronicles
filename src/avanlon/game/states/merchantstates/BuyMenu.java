@@ -1,4 +1,4 @@
-package avanlon.game.states;
+package avanlon.game.states.merchantstates;
 
 import avanlon.framework.gui.MyButton;
 import avanlon.framework.gui.WindowManager;
@@ -8,6 +8,7 @@ import avanlon.game.entity.Player.Player;
 import avanlon.game.items.Armor;
 import avanlon.game.items.Item;
 import avanlon.game.items.Weapon;
+import avanlon.game.states.newpage.LaunchBuyPage;
 
 import javax.swing.*;
 import java.awt.*;

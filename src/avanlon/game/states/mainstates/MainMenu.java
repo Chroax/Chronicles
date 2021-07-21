@@ -1,4 +1,4 @@
-package avanlon.game.states;
+package avanlon.game.states.mainstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;

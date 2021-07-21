@@ -2,7 +2,7 @@ package avanlon.framework;
 
 import avanlon.framework.gamestates.GameStateManager;
 import avanlon.framework.gui.WindowManager;
-import avanlon.game.states.TitleScreen;
+import avanlon.game.states.mainstates.TitleScreen;
 
 import java.awt.*;
 import java.awt.event.*;

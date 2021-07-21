@@ -1,10 +1,13 @@
-package avanlon.game.states;
+package avanlon.game.states.merchantstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
 import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.newpage.LaunchSellArmor;
+import avanlon.game.states.newpage.LaunchSellPotion;
+import avanlon.game.states.newpage.LaunchSellWeapon;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -85,7 +88,7 @@ public class SellMenu extends GameState
                         WindowManager.frame.setVisible(false);
                         break;
                     case BACK:
-                        super.gameStateManager.stackState(new PlayMenu(gameStateManager, player));
+                        super.gameStateManager.stackState(new MerchantMenu(gameStateManager, player));
                         break;
                 }
                 break;

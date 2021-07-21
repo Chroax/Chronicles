@@ -65,7 +65,6 @@ public class Inventory
         {
             total += this.invWeaponList.get(weapon);
             this.invWeaponList.put(weapon, total);
-
         }
     }
 
@@ -88,62 +87,113 @@ public class Inventory
         {
             total += this.invPotionList.get(potion);
             this.invPotionList.put(potion, total);
-            System.out.println("Total " + potion.getDisplayName() + " in Inventory : " + invPotionList.get(potion));
         }
     }
 
-    public void useItem(String type, Object item, int total)
+    public boolean useItem(String type, Object item, int total, boolean isInv)
     {
+        boolean isCheck = false;
         switch (type)
         {
             case "Weapon" -> {
                 Weapon weapon = (Weapon) item;
                 if (this.invWeaponList.get(weapon) == null)
-                    JOptionPane.showMessageDialog(null,"You Dont Have " + weapon.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + weapon.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + weapon.getDisplayName(), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else if (total > this.invWeaponList.get(weapon))
-                    JOptionPane.showMessageDialog(null,"You only have " + this.invWeaponList.get(weapon), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invWeaponList.get(weapon), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invWeaponList.get(weapon), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else
                 {
                     this.capacity -= total;
                     int used = this.invWeaponList.get(weapon) - total;
                     if (used == 0)
                         this.invWeaponList.remove(weapon);
-                    JOptionPane.showMessageDialog(null,"You used " + weapon.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        this.invWeaponList.put(weapon, used);
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You used " + weapon.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You sell " + weapon.getDisplayName() + " [x" + total + "]", "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                    isCheck = true;
                 }
             }
             case "Armor" -> {
                 Armor armor = (Armor) item;
                 if (this.invArmorList.get(armor) == null)
-                    JOptionPane.showMessageDialog(null,"You Dont Have " + armor.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + armor.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + armor.getDisplayName(), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else if (total > this.invArmorList.get(armor))
-                    JOptionPane.showMessageDialog(null,"You only have " + this.invArmorList.get(armor), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invArmorList.get(armor), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invArmorList.get(armor), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else
                 {
                     this.capacity -= total;
                     int used = this.invArmorList.get(armor) - total;
                     if (used == 0)
                         this.invArmorList.remove(armor);
-                    JOptionPane.showMessageDialog(null,"You used " + armor.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        this.invArmorList.put(armor, used);
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You used " + armor.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You sell " + armor.getDisplayName() + " [x" + total + "]", "Merchant Message", JOptionPane.WARNING_MESSAGE);
+
+                    isCheck = true;
                 }
             }
             case "Potion" -> {
                 Item potion = (Item) item;
                 if (this.invPotionList.get(potion) == null)
-                    JOptionPane.showMessageDialog(null,"You Dont Have " + potion.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + potion.getDisplayName(), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You Dont Have " + potion.getDisplayName(), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else if (total > this.invPotionList.get(potion))
-                    JOptionPane.showMessageDialog(null,"You only have " + this.invPotionList.get(potion), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                {
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invPotionList.get(potion), "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You only have " + this.invPotionList.get(potion), "Merchant Message", JOptionPane.WARNING_MESSAGE);
+                }
                 else
                 {
                     this.capacity -= total;
                     int used = this.invPotionList.get(potion) - total;
                     if (used == 0)
                         this.invPotionList.remove(potion);
-                    JOptionPane.showMessageDialog(null,"You used " + potion.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        this.invPotionList.put(potion, used);
+                    if(isInv)
+                        JOptionPane.showMessageDialog(null,"You used " + potion.getDisplayName() + " [x" + total + "]", "Inventory Message", JOptionPane.WARNING_MESSAGE);
+                    else
+                        JOptionPane.showMessageDialog(null,"You sell " + potion.getDisplayName() + " [x" + total + "]", "Merchant Message", JOptionPane.WARNING_MESSAGE);
+
+                    isCheck = true;
                 }
             }
         }
         if(this.capacity < 0)
             capacity = 0;
+        return isCheck;
     }
 
     public int getMaxCapacity()

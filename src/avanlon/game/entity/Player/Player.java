@@ -1,12 +1,14 @@
 package avanlon.game.entity.Player;
 
 import avanlon.framework.resources.Textures;
+import avanlon.framework.resources.Items;
 import avanlon.game.entity.Entities;
 import avanlon.game.items.Armor;
+import avanlon.game.items.Item;
 import avanlon.game.items.Weapon;
 
 import javax.swing.*;
-import java.awt.*;
+import java.util.Locale;
 
 public class Player extends Entities
 {
@@ -16,19 +18,22 @@ public class Player extends Entities
     private int phyDefBuff;
     private int magAttBuff;
     private int phyAttBuff;
+    private int critBuff;
+    private int moveSpeedBuff;
     private int gold;
     private int exp;
     private int baseExp;
-    private int playerClass;
     private int level;
     private int crit;
+    private int baseCrit;
     private int pointSkill;
+    private String playerClass;
     private Weapon myWeapon;
     private Armor myArmor;
     private Skill [] mySkill;
     public Inventory myInventory;
 
-    public Player(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int crit, int magAtt, int phyAtt, int id, int maxSkillEquip)
+    public Player(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int crit, int magAtt, int phyAtt, String jobClass, int maxSkillEquip)
     {
         super(name, HP, MP, magDef, phyDef, movSpeed, magAtt, phyAtt);
         this.HPBuff = 0;
@@ -37,18 +42,21 @@ public class Player extends Entities
         this.phyDefBuff = 0;
         this.magAttBuff = 0;
         this.phyAttBuff = 0;
+        this.critBuff = 0;
+        this.moveSpeedBuff = 0;
         this.crit = crit;
+        this.baseCrit = crit;
         this.gold = 50000;
         this.exp = 0;
         this.pointSkill = 3;
         this.baseExp = 150;
         this.level = 1;
-        this.playerClass = id;
+        this.playerClass = jobClass;
         this.mySkill = new Skill[maxSkillEquip];
         this.myInventory = new Inventory(20);
     }
 
-    public int getPlayerClass()
+    public String getPlayerClass()
     {
         return this.playerClass;
     }
@@ -93,22 +101,20 @@ public class Player extends Entities
     public void equipWeapon(Weapon weapon)
     {
         if(this.myWeapon == null)
-        {
             addWeaponBuff(weapon);
-        }
         else
         {
             this.magAttBuff -= myWeapon.getMagAttack();
             this.phyAttBuff -= myWeapon.getPhyAttack();
             this.phyDefBuff -= myWeapon.getPhyDef();
+            myInventory.addItems("Weapon", myWeapon, 1);
             addWeaponBuff(weapon);
         }
-        addBuff();
     }
 
     private void addWeaponBuff(Weapon weapon)
     {
-        this.myWeapon = new Weapon(weapon.getName(), weapon.getRarity(), weapon.getDisplayName(), weapon.getDescription(), weapon.getBuyPrice(), weapon.getMagAttack(), weapon.getPhyAttack(), weapon.getPhyDef(), weapon.getWeaponClass(), weapon.getType());
+        this.myWeapon = weapon;
         this.magAttBuff += myWeapon.getMagAttack();
         this.phyAttBuff += myWeapon.getPhyAttack();
         this.phyDefBuff += myWeapon.getPhyDef();
@@ -118,7 +124,7 @@ public class Player extends Entities
     {
         if(this.myArmor == null)
         {
-            this.myArmor = new Armor(armor.getName(), armor.getRarity(), armor.getDisplayName(), armor.getBuyPrice(), armor.getMagDef(), armor.getPhyDef(), armor.getType());
+            this.myArmor = armor;
             this.magDefBuff += myArmor.getMagDef();
             this.phyDefBuff += myArmor.getPhyDef();
         }
@@ -126,11 +132,11 @@ public class Player extends Entities
         {
             this.magDefBuff -= myArmor.getMagDef();
             this.phyDefBuff -= myArmor.getPhyDef();
-            this.myArmor = new Armor(armor.getName(), armor.getRarity(), armor.getDisplayName(), armor.getBuyPrice(), armor.getMagDef(), armor.getPhyDef(), armor.getType());
+            myInventory.addItems("Armor", myArmor, 1);
+            this.myArmor = armor;
             this.magDefBuff += myArmor.getMagDef();
             this.phyDefBuff += myArmor.getPhyDef();
         }
-        addBuff();
     }
     public void addSkill(Skill skill, int slot)
     {
@@ -177,9 +183,9 @@ public class Player extends Entities
         for (int i = 0; i < mySkill.length; i++)
         {
             if (mySkill[i] != null)
-                skillList += i + 1 + ". " + mySkill[i].getDisplayName() /*+ mySkill[i].getDescription()*/ + "\n";
+                skillList += i + 1 + ". " + mySkill[i].getDisplayName()  + "\n    Desc : " + mySkill[i].getDescription() + "\n";
             else
-                skillList += i + 1 + ". None" + "\n";
+                skillList += i + 1 + ". None" + "\n    Desc : " + "\n";
         }
         JOptionPane.showMessageDialog(null, skillList, "My Skill List", JOptionPane.PLAIN_MESSAGE);
     }
@@ -190,9 +196,9 @@ public class Player extends Entities
         for (int i = 0; i < mySkill.length; i++)
         {
             if (mySkill[i] != null)
-                skillList += i + 1 + ". " + mySkill[i].getDisplayName() /*+ mySkill[i].getDescription()*/ + "\n";
+                skillList += i + 1 + ". " + mySkill[i].getDisplayName()  + "\n    Desc : " + mySkill[i].getDescription() + "\n";
             else
-                skillList += i + 1 + ". None" + "\n";
+                skillList += i + 1 + ". None" + "\n    Desc : " + "\n";
         }
         int value = JOptionPane.showOptionDialog(null, skillList + "\nADD SKILL ?", "Add Skill to MySkill", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, 0);
         if(value == 0)
@@ -211,9 +217,10 @@ public class Player extends Entities
             }
         }
     }
-    public void addGold(int gold)
+    public void addGold(String type, Object item, int gold, int total, boolean isInv)
     {
-        this.gold += gold;
+        if(this.myInventory.useItem(type, item, total, isInv))
+            this.gold += gold;
     }
     public void useGold(String type, Object item, int total, int gold)
     {
@@ -226,12 +233,69 @@ public class Player extends Entities
                 this.gold -= gold;
         }
     }
-
+    public void useItem(String type, Object item, int total, boolean isInv)
+    {
+        if(type.equals("Weapon"))
+        {
+            Weapon weapon = (Weapon) item;
+            if(weapon.getWeaponClass().toLowerCase(Locale.ROOT).equals(this.playerClass.toLowerCase(Locale.ROOT)))
+            {
+                if(this.myInventory.useItem(type, item, total, isInv))
+                    equipWeapon(weapon);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Doesn't match your job class", "Equip Weapon", JOptionPane.WARNING_MESSAGE);
+        }
+        else
+        {
+            if(this.myInventory.useItem(type, item, total, isInv))
+            {
+                switch (type)
+                {
+                    case "Armor" ->
+                            {
+                                Armor armor = (Armor) item;
+                                equipArmor(armor);
+                            }
+                    case "Potion" ->
+                            {
+                                Item potion = (Item) item;
+                                switch (potion.getName())
+                                {
+                                    case "HEALING_POTION" -> this.HPBuff += 100 * total ;
+                                    case "MP_POTION" -> this.MPBuff += 50 * total;
+                                    case "FOCUS_POTION" -> this.critBuff += 2 * total;
+                                    case "RAPID_POTION" -> this.moveSpeedBuff += total;
+                                    case "RAGE_POTION" ->
+                                            {
+                                                this.magAttBuff += 5 * total;
+                                                this.phyAttBuff += 5 * total;
+                                            }
+                                    case "SHIELD_POTION" ->
+                                            {
+                                                this.magDefBuff += total;
+                                                this.phyDefBuff += total;
+                                            }
+                                }
+                            }
+                }
+            }
+        }
+        addBuff();
+    }
     public void addBuff()
     {
         this.magDef = this.baseMagDef + magDefBuff;
         this.phyDef = this.basePhyDef + phyDefBuff;
         this.magAtt = this.baseMagAtt + magAttBuff;
         this.phyAtt = this.basePhyAtt + phyAttBuff;
+        this.HP = this.HPMax + HPBuff;
+        if (this.HP > this.HPMax)
+            this.HP = this.HPMax;
+        this.MP = this.MPMax + MPBuff;
+        if (this.MP > this.MPMax)
+            this.MP = this.HPMax;
+        this.movSpeed = this.baseMovSpeed + moveSpeedBuff;
+        this.crit = this.baseCrit + critBuff;
     }
 }

@@ -1,21 +1,19 @@
-package avanlon.game.states;
+package avanlon.game.states.inventorystates;
 
-import avanlon.framework.gui.MiniPanel;
 import avanlon.framework.gui.MyButton;
 import avanlon.framework.gui.WindowManager;
+import avanlon.framework.resources.Items;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
-import avanlon.game.items.Armor;
-import avanlon.game.items.Item;
 import avanlon.game.items.Weapon;
+import avanlon.game.states.newpage.LaunchInvWeapon;
+import avanlon.game.states.newpage.LaunchSellWeapon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -25,8 +23,8 @@ public class InvWeaponMenu extends JPanel implements ActionListener
     private MyButton backButton;
     private MyButton [] buttons;
     private Rectangle [] rectangle;
-    private Hashtable <Weapon, Integer> weaponList;
-    private boolean isInv;
+    private final Hashtable <Weapon, Integer> weaponList;
+    private final boolean isInv;
 
     public InvWeaponMenu(Player player, boolean isInv)
     {
@@ -36,15 +34,25 @@ public class InvWeaponMenu extends JPanel implements ActionListener
         this.setLayout(null);
         this.setBackground(Color.BLACK);
         this.isInv = isInv;
-        addButton();
+
+        this.backButton = new MyButton("BACK");
+        this.backButton.setFont(new Font("Dialog", Font.BOLD, 20));
+        this.backButton.setMargin(new Insets(0, 0, 0, 0));
+        this.backButton.setBorder(null);
+        this.backButton.setFocusPainted(false);
+        this.backButton.setForeground(Color.GREEN);
+        this.backButton.setBackground(Color.BLACK);
+        this.backButton.setHoverBackgroundColor(Color.BLACK.brighter());
+        this.backButton.setPressedBackgroundColor(Color.BLACK);
+        this.backButton.addActionListener(this);
+        this.backButton.setBounds(50, 450, 100, 50);
+        this.add(backButton);
+
         addPanel();
     }
 
     public void addPanel()
     {
-        System.out.println(isInv);
-        int totalSlot;
-        totalSlot =  weaponList.size();
         this.rectangle = new Rectangle[12];
         this.buttons = new MyButton[12];
         int x = 25, y = 65;
@@ -74,25 +82,23 @@ public class InvWeaponMenu extends JPanel implements ActionListener
             this.buttons[i].setPressedBackgroundColor(Color.BLACK);
             this.buttons[i].addActionListener(this);
             this.buttons[i].setVisible(false);
-            this.add(buttons[i]);
         }
-        for (int i = 0; i < totalSlot; i++) 
+
+        for (int i = 0; i < weaponList.size(); i++)
             this.buttons[i].setVisible(true);
+        setName();
     }
-    public void addButton()
+
+    private void setName()
     {
-        this.backButton = new MyButton("BACK");
-        this.backButton.setFont(new Font("Dialog", Font.BOLD, 20));
-        this.backButton.setMargin(new Insets(0, 0, 0, 0));
-        this.backButton.setBorder(null);
-        this.backButton.setFocusPainted(false);
-        this.backButton.setForeground(Color.GREEN);
-        this.backButton.setBackground(Color.BLACK);
-        this.backButton.setHoverBackgroundColor(Color.BLACK.brighter());
-        this.backButton.setPressedBackgroundColor(Color.BLACK);
-        this.backButton.addActionListener(this);
-        this.backButton.setBounds(50, 450, 100, 50);
-        this.add(backButton);
+        int index = 0;
+        Enumeration <Weapon> it = weaponList.keys();
+        while (it.hasMoreElements())
+        {
+            this.buttons[index].setActionCommand(it.nextElement().getName());
+            index++;
+        }
+        for (MyButton button : buttons) this.add(button);
     }
 
     public void paint(Graphics graphics)
@@ -123,6 +129,8 @@ public class InvWeaponMenu extends JPanel implements ActionListener
         graphics.setColor(Color.WHITE);
         for (int i = 0; i < rectangle.length; i++) 
         {
+            if(i >= weaponList.size())
+                break;
             graphics.drawRoundRect(rectangle[i].x, rectangle[i].y, rectangle[i].width, rectangle[i].height, 10, 10);
             graphics.drawRoundRect(rectangle[i].x, rectangle[i].y, rectangle[i].height, rectangle[i].height, 10, 10);
         }
@@ -148,6 +156,67 @@ public class InvWeaponMenu extends JPanel implements ActionListener
         }
     }
 
+    private void actionIsInv(ActionEvent e)
+    {
+        Weapon useWeapon = Items.weapons.get(e.getActionCommand());
+        int value = getTotalUse();
+        if(value != 0 && value != -1)
+        {
+            if(JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Use " + useWeapon.getDisplayName() + " [x" + value + "]", "Inventory Weapon", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == 0)
+                player.useItem("Weapon", useWeapon, value, isInv);
+        }
+    }
+
+    private void actionIsNotInv(ActionEvent e)
+    {
+        Weapon sellWeapon = Items.weapons.get(e.getActionCommand());
+        int value = getTotalSell();
+        if(value != 0 && value != -1)
+        {
+            if(JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Sell " + sellWeapon.getDisplayName() + " [x" + value + "]\nSell Price : " + sellWeapon.getSellPrice(), "Sell Weapon", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == 0)
+            {
+                int totalPrice = sellWeapon.getSellPrice() * value;
+                player.addGold("Weapon", sellWeapon, totalPrice, value, isInv);
+            }
+        }
+    }
+
+    private int getTotalSell()
+    {
+        int value = 0;
+        try
+        {
+            String answer = JOptionPane.showInputDialog("How Many do You want to sell ?", "1");
+            if(answer != null)
+                value = Integer.parseInt(answer);
+        }
+        catch (NumberFormatException arg0)
+        {
+            value = -1;
+            System.err.println("[InvWeaponMenu] [SellMenu] Error Parse Integer");
+            arg0.printStackTrace();
+        }
+        return value;
+    }
+
+    private int getTotalUse()
+    {
+        int value = 0;
+        try
+        {
+            String answer = JOptionPane.showInputDialog("How Many do You want to use ?", "1");
+            if(answer != null)
+                value = Integer.parseInt(answer);
+        }
+        catch (NumberFormatException arg0)
+        {
+            value = -1;
+            System.err.println("[InvWeaponMenu] [SellMenu] Error Parse Integer");
+            arg0.printStackTrace();
+        }
+        return value;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
@@ -162,9 +231,11 @@ public class InvWeaponMenu extends JPanel implements ActionListener
         else
         {
             if(isInv)
-                JOptionPane.showMessageDialog(null, "Hai", "Use Weapon", JOptionPane.WARNING_MESSAGE);
+                actionIsInv(e);
             else
-                JOptionPane.showMessageDialog(null, "Hai", "Sell Weapon", JOptionPane.WARNING_MESSAGE);
+                actionIsNotInv(e);
+            setName();
+            repaint();
         }
     }
 }

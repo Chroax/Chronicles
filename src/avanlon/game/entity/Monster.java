@@ -6,6 +6,7 @@ public class Monster extends Entities
     private int MPDeBuff;
     private int DefDeBuff;
     private int attDeBuff;
+    private int movSpeedDeBuff;
     private int goldDrop;
     private int expDrop;
     private int level;
@@ -17,6 +18,7 @@ public class Monster extends Entities
         this.MPDeBuff = 0;
         this.DefDeBuff = 0;
         this.attDeBuff = 0;
+        this.movSpeedDeBuff = 0;
         this.expDrop = expDrop;
         this.goldDrop = goldDrop;
         this.level = level;

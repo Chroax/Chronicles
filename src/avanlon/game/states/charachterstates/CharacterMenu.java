@@ -1,10 +1,12 @@
-package avanlon.game.states;
+package avanlon.game.states.charachterstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
 import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.mainstates.PlayMenu;
+import avanlon.game.states.newpage.LaunchSkillPage;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -48,8 +50,14 @@ public class CharacterMenu extends GameState
         graphics.drawString("HP : " + player.getHP() + "\\" + player.getHPMax() + "         MP : " + player.getMP() + "\\" + player.getMPMax(), 60, 180);
         graphics.drawString("MagDef : " + player.getMagDef() + "        PhyDef : " + player.getPhyDef(), 60, 220);
         graphics.drawString("MagAtt : " + player.getMagAtt() + "             PhyAtt : " + player.getPhyAtt(), 60, 260);
-        graphics.drawString("Weapon : Fist", 60, 300);
-        graphics.drawString("Armor : Basic Armor", 60, 340);
+        if(player.getMyWeapon() != null)
+            graphics.drawString("Weapon : " + player.getMyWeapon().getDisplayName(), 60, 300);
+        else
+            graphics.drawString("Weapon : Fist", 60, 300);
+        if(player.getMyArmor() != null)
+            graphics.drawString("Armor : " + player.getMyArmor().getDisplayName(), 60, 340);
+        else
+            graphics.drawString("Armor : Basic Armor", 60, 340);
 
         graphics.setFont(new Font("Dialog", Font.BOLD, 25));
         for(int i=0;i<this.optionsMenu.length;i++)
@@ -97,13 +105,7 @@ public class CharacterMenu extends GameState
 
     public void renderPlayer(Graphics graphics)
     {
-        BufferedImage sprite = switch (player.getPlayerClass())
-                {
-                    case 0 -> Textures.getSprite("PALADIN", "Entities");
-                    case 1-> Textures.getSprite("WIZARD", "Entities");
-                    case 2-> Textures.getSprite("ARCHER", "Entities");
-                    default -> null;
-                };
+        BufferedImage sprite = Textures.getSprite(player.getPlayerClass(), "Entities");
         graphics.drawImage(sprite, 500, 80, sprite.getWidth()*zoomLevel, sprite.getHeight()*zoomLevel, null);
         renderGoldAndExp(graphics);
     }
@@ -122,8 +124,17 @@ public class CharacterMenu extends GameState
     }
     public void renderWeapon(Graphics graphics)
     {
-        BufferedImage sprite = Textures.getSprite("FIST", "Weapon");
-        BufferedImage sprite2 = Textures.getSprite("BASIC_ARMOR", "Armor");
+        BufferedImage sprite;
+        BufferedImage sprite2;
+        if(player.getMyWeapon() != null)
+            sprite = Textures.getSprite(player.getMyWeapon().getName(), "Weapon");
+        else
+            sprite = Textures.getSprite("FIST", "Weapon");
+        if(player.getMyArmor() != null)
+            sprite2 = Textures.getSprite(player.getMyArmor().getName(), "Armor");
+        else
+            sprite2 = Textures.getSprite("BASIC_ARMOR", "Armor");
+
         graphics.setColor(Color.WHITE);
         graphics.setFont(new Font("Dialog", Font.BOLD, 25));
         graphics.drawString("Weapon", 800, 100);

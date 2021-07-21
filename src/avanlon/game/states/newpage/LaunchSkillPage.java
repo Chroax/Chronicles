@@ -1,21 +1,22 @@
-package avanlon.game.states;
+package avanlon.game.states.newpage;
 
 import avanlon.framework.gui.WindowManager;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.charachterstates.SkillMenu;
 
 import javax.swing.*;
 
-public class LaunchSellWeapon
+public class LaunchSkillPage
 {
     public static JFrame frame = new JFrame();
 
-    public LaunchSellWeapon(Player player, boolean isInv)
+    public LaunchSkillPage(Player player)
     {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WindowManager.WIDTH, WindowManager.HEIGHT);
         frame.setLayout(null);
+        frame.add(new SkillMenu(player));
         frame.setResizable(false);
-        frame.add(new InvWeaponMenu(player, isInv));
         frame.setVisible(true);
     }
 }

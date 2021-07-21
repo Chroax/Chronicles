@@ -1,9 +1,12 @@
-package avanlon.game.states;
+package avanlon.game.states.mainstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.PlayState;
+import avanlon.game.states.charachterstates.CharacterMenu;
+import avanlon.game.states.merchantstates.MerchantMenu;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -30,9 +33,9 @@ public class PlayMenu extends GameState
         this.zoomLevel = 2;
         switch (playerClass)
         {
-            case 0 -> player = new Player("Player", 250, 100, 100, 100, 100, 60, 0, 150, 0, totalMaxSkill);
-            case 1 -> player = new Player("Player", 225, 200, 20, 50, 75, 40, 100, 0, 1, totalMaxSkill);
-            case 2 -> player = new Player("Player", 200, 100, 30, 40, 300, 100, 50, 75, 2, totalMaxSkill);
+            case 0 -> player = new Player("Player", 250, 100, 100, 100, 100, 60, 0, 150, "PALADIN", totalMaxSkill);
+            case 1 -> player = new Player("Player", 225, 200, 20, 50, 75, 40, 100, 0, "WIZARD", totalMaxSkill);
+            case 2 -> player = new Player("Player", 200, 100, 30, 40, 300, 100, 50, 75, "ARCHER", totalMaxSkill);
         }
     }
 

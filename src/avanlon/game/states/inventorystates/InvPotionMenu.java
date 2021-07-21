@@ -1,12 +1,13 @@
-package avanlon.game.states;
+package avanlon.game.states.inventorystates;
 
-import avanlon.framework.gui.MiniPanel;
 import avanlon.framework.gui.MyButton;
 import avanlon.framework.gui.WindowManager;
+import avanlon.framework.resources.Items;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
 import avanlon.game.items.Item;
-import avanlon.game.items.Item;
+import avanlon.game.states.newpage.LaunchInvPotion;
+import avanlon.game.states.newpage.LaunchSellPotion;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +23,8 @@ public class InvPotionMenu extends JPanel implements ActionListener
     private MyButton backButton;
     private MyButton [] buttons;
     private Rectangle [] rectangle;
-    private Hashtable <Item, Integer> potionList;
-    private boolean isInv;
+    private final Hashtable <Item, Integer> potionList;
+    private final boolean isInv;
 
     public InvPotionMenu(Player player, boolean isInv)
     {
@@ -33,15 +34,25 @@ public class InvPotionMenu extends JPanel implements ActionListener
         this.setLayout(null);
         this.setBackground(Color.BLACK);
         this.isInv = isInv;
-        addButton();
+
+        this.backButton = new MyButton("BACK");
+        this.backButton.setFont(new Font("Dialog", Font.BOLD, 20));
+        this.backButton.setMargin(new Insets(0, 0, 0, 0));
+        this.backButton.setBorder(null);
+        this.backButton.setFocusPainted(false);
+        this.backButton.setForeground(Color.GREEN);
+        this.backButton.setBackground(Color.BLACK);
+        this.backButton.setHoverBackgroundColor(Color.BLACK.brighter());
+        this.backButton.setPressedBackgroundColor(Color.BLACK);
+        this.backButton.addActionListener(this);
+        this.backButton.setBounds(50, 450, 100, 50);
+        this.add(backButton);
+
         addPanel();
     }
 
     public void addPanel()
     {
-        System.out.println(isInv);
-        int totalSlot;
-        totalSlot =  potionList.size();
         this.rectangle = new Rectangle[12];
         this.buttons = new MyButton[12];
         int x = 25, y = 65;
@@ -71,25 +82,23 @@ public class InvPotionMenu extends JPanel implements ActionListener
             this.buttons[i].setPressedBackgroundColor(Color.BLACK);
             this.buttons[i].addActionListener(this);
             this.buttons[i].setVisible(false);
-            this.add(buttons[i]);
         }
-        for (int i = 0; i < totalSlot; i++)
+
+        for (int i = 0; i < potionList.size(); i++)
             this.buttons[i].setVisible(true);
+        setName();
     }
-    public void addButton()
+
+    private void setName()
     {
-        this.backButton = new MyButton("BACK");
-        this.backButton.setFont(new Font("Dialog", Font.BOLD, 20));
-        this.backButton.setMargin(new Insets(0, 0, 0, 0));
-        this.backButton.setBorder(null);
-        this.backButton.setFocusPainted(false);
-        this.backButton.setForeground(Color.GREEN);
-        this.backButton.setBackground(Color.BLACK);
-        this.backButton.setHoverBackgroundColor(Color.BLACK.brighter());
-        this.backButton.setPressedBackgroundColor(Color.BLACK);
-        this.backButton.addActionListener(this);
-        this.backButton.setBounds(50, 450, 100, 50);
-        this.add(backButton);
+        int index = 0;
+        Enumeration <Item> it = potionList.keys();
+        while (it.hasMoreElements())
+        {
+            this.buttons[index].setActionCommand(it.nextElement().getName());
+            index++;
+        }
+        for (MyButton button : buttons) this.add(button);
     }
 
     public void paint(Graphics graphics)
@@ -120,6 +129,8 @@ public class InvPotionMenu extends JPanel implements ActionListener
         graphics.setColor(Color.WHITE);
         for (int i = 0; i < rectangle.length; i++)
         {
+            if(i >= potionList.size())
+                break;
             graphics.drawRoundRect(rectangle[i].x, rectangle[i].y, rectangle[i].width, rectangle[i].height, 10, 10);
             graphics.drawRoundRect(rectangle[i].x, rectangle[i].y, rectangle[i].height, rectangle[i].height, 10, 10);
         }
@@ -133,7 +144,7 @@ public class InvPotionMenu extends JPanel implements ActionListener
             graphics.setFont(new Font("Dialog", Font.BOLD, 13));
             graphics.drawImage(sprite3, rectangle[i].x + 12, rectangle[i].y + 12, sprite3.getWidth()/3, sprite3.getHeight()/3, null);
             graphics.drawString(potion.getDisplayName() + " [" + potion.getRarity() + "]", rectangle[i].x+77, rectangle[i].y+17);
-            graphics.drawString(potion.getDescription(), rectangle[i].x+77, rectangle[i].y+64);
+            graphics.drawString(potion.getDescription(), rectangle[i].x+77, rectangle[i].y+34);
             graphics.drawString("X" + potionList.get(potion), rectangle[i].x+250, rectangle[i].y+17);
             if(isInv)
                 graphics.drawString("Use", rectangle[i].x+245, rectangle[i].y+64);
@@ -141,6 +152,67 @@ public class InvPotionMenu extends JPanel implements ActionListener
                 graphics.drawString("Sell", rectangle[i].x+245, rectangle[i].y+64);
             i++;
         }
+    }
+
+    private void actionIsInv(ActionEvent e)
+    {
+        Item usePotion = Items.potions.get(e.getActionCommand());
+        int value = getTotalUse();
+        if(value != 0 && value != -1)
+        {
+            if(JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Use " + usePotion.getDisplayName() + " [x" + value + "]", "Inventory Potion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == 0)
+                player.useItem("Potion", usePotion, value, isInv);
+        }
+    }
+
+    private void actionIsNotInv(ActionEvent e)
+    {
+        Item sellPotion = Items.potions.get(e.getActionCommand());
+        int value = getTotalSell();
+        if(value != 0 && value != -1)
+        {
+            if(JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Sell " + sellPotion.getDisplayName() + " [x" + value + "]\nSell Price : " + sellPotion.getSellPrice(), "Sell Potion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null) == 0)
+            {
+                int totalPrice = sellPotion.getSellPrice() * value;
+                player.addGold("Potion", sellPotion, totalPrice, value, isInv);
+            }
+        }
+    }
+
+    private int getTotalSell()
+    {
+        int value = 0;
+        try
+        {
+            String answer = JOptionPane.showInputDialog("How Many do You want to sell ?", "1");
+            if(answer != null)
+                value = Integer.parseInt(answer);
+        }
+        catch (NumberFormatException arg0)
+        {
+            value = -1;
+            System.err.println("[InvPotionMenu] [SellMenu] Error Parse Integer");
+            arg0.printStackTrace();
+        }
+        return value;
+    }
+
+    private int getTotalUse()
+    {
+        int value = 0;
+        try
+        {
+            String answer = JOptionPane.showInputDialog("How Many do You want to use ?", "1");
+            if(answer != null)
+                value = Integer.parseInt(answer);
+        }
+        catch (NumberFormatException arg0)
+        {
+            value = -1;
+            System.err.println("[InvPotionMenu] [SellMenu] Error Parse Integer");
+            arg0.printStackTrace();
+        }
+        return value;
     }
 
     @Override
@@ -151,15 +223,18 @@ public class InvPotionMenu extends JPanel implements ActionListener
             if(isInv)
                 LaunchInvPotion.frame.dispose();
             else
-                LaunchInvPotion.frame.dispose();
+                LaunchSellPotion.frame.dispose();
             WindowManager.frame.setVisible(true);
         }
         else
         {
             if(isInv)
-                JOptionPane.showMessageDialog(null, "Hai", "Use Potion", JOptionPane.WARNING_MESSAGE);
+                actionIsInv(e);
             else
-                JOptionPane.showMessageDialog(null, "Hai", "Sell Potion", JOptionPane.WARNING_MESSAGE);
+                actionIsNotInv(e);
+            setName();
+            repaint();
         }
     }
 }
+

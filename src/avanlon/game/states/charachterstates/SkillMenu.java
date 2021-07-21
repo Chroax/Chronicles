@@ -1,10 +1,11 @@
-package avanlon.game.states;
+package avanlon.game.states.charachterstates;
 
 import avanlon.framework.gui.MyButton;
 import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Skills;
 import avanlon.game.entity.Player.Player;
 import avanlon.game.entity.Player.Skill;
+import avanlon.game.states.newpage.LaunchSkillPage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -51,14 +52,31 @@ public class SkillMenu extends JPanel implements ActionListener
                 String path = "";
                 switch (player.getPlayerClass())
                 {
-                    case 0 -> path = "res/textures/Skill/SKILL_PALADIN_";
-                    case 1 -> path = "res/textures/Skill/SKILL_WIZARD_";
-                    case 2 -> path = "res/textures/Skill/SKILL_ARCHER_";
+                    case "PALADIN" ->
+                            {
+                                path = "res/textures/Skill/SKILL_PALADIN_";
+                                if(Skills.treePaladin.findSkill(i + 1).isUnLocked())
+                                    path += number + ".png";
+                                else
+                                    path += number + " (1).png";
+                            }
+                    case "WIZARD" ->
+                            {
+                                path = "res/textures/Skill/SKILL_WIZARD_";
+                                if(Skills.treeWizard.findSkill(i + 1).isUnLocked())
+                                    path += number + ".png";
+                                else
+                                    path += number + " (1).png";
+                            }
+                    case "ARCHER" ->
+                            {
+                                path = "res/textures/Skill/SKILL_ARCHER_";
+                                if(Skills.treeArcher.findSkill(i + 1).isUnLocked())
+                                    path += number + ".png";
+                                else
+                                    path += number + " (1).png";
+                            }
                 }
-                if(Skills.treeArcher.findSkill(i + 1).isUnLocked())
-                    path += number + ".png";
-                else
-                    path += number + " (1).png";
 
                 sprite = ImageIO.read(new File(path));
 
@@ -184,7 +202,13 @@ public class SkillMenu extends JPanel implements ActionListener
 
     public void setImage(int i)
     {
-        Skill skill = Skills.treeArcher.findSkill(i+1);
+        Skill skill = switch (player.getPlayerClass())
+                {
+                    case "PALADIN" -> skill = Skills.treePaladin.findSkill(i+1);
+                    case "WIZARD" -> skill = Skills.treeWizard.findSkill(i+1);
+                    default -> skill = Skills.treeArcher.findSkill(i+1);
+                };
+
         if(skill.isUnLocked())
             player.addSkillYesOrNo(skill);
         else
@@ -196,21 +220,26 @@ public class SkillMenu extends JPanel implements ActionListener
                 String path = "";
                 switch (player.getPlayerClass())
                 {
-                    case 0 -> path = "res/textures/Skill/SKILL_PALADIN_";
-                    case 1 -> path = "res/textures/Skill/SKILL_WIZARD_";
-                    case 2 -> path = "res/textures/Skill/SKILL_ARCHER_";
+                    case "PALADIN" -> path = "res/textures/Skill/SKILL_PALADIN_";
+                    case "WIZARD" -> path = "res/textures/Skill/SKILL_WIZARD_";
+                    case "ARCHER" -> path = "res/textures/Skill/SKILL_ARCHER_";
                 }
                 path += i + 1 + ".png";
 
                 ImageIcon icon = new ImageIcon(path);
 
-                int value = JOptionPane.showOptionDialog(null, "Do you want unlock this skill ?\nName : " + skill.getDisplayName(), "Unlock Skill", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon, null, 0);
+                int value = JOptionPane.showOptionDialog(null, "Do you want unlock this skill ?\nName : " + skill.getDisplayName() + "\nDesc : " + skill.getDescription(), "Unlock Skill", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon, null, 0);
 
                 if(value == 0)
                 {
                     try
                     {
-                        Skill rootSkill = Skills.treeArcher.findSkill(Integer.parseInt(skill.getRootId()), (Integer.parseInt((skill.getSkillId()))));
+                        Skill rootSkill = switch (player.getPlayerClass())
+                                {
+                                    case "PALADIN" -> rootSkill = Skills.treePaladin.findSkill(Integer.parseInt(skill.getRootId()), (Integer.parseInt((skill.getSkillId()))));
+                                    case "WIZARD" -> rootSkill = Skills.treeWizard.findSkill(Integer.parseInt(skill.getRootId()), (Integer.parseInt((skill.getSkillId()))));
+                                    default -> rootSkill = Skills.treeArcher.findSkill(Integer.parseInt(skill.getRootId()), (Integer.parseInt((skill.getSkillId()))));
+                                };
                         if (rootSkill != null)
                         {
                             if(rootSkill.isUnLocked())

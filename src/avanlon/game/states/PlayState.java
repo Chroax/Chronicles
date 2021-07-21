@@ -9,7 +9,7 @@ import java.awt.*;
 public class PlayState extends GameState
 {
 
-    protected PlayState(GameStateManager manager, Player player)
+    public PlayState(GameStateManager manager, Player player)
     {
         super(manager);
     }

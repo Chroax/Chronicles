@@ -16,6 +16,7 @@ public class Entities
     protected int phyAtt;
     protected int basePhyAtt;
     protected int movSpeed;
+    protected int baseMovSpeed;
 
     public Entities(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int magAtt, int phyAtt)
     {
@@ -29,6 +30,7 @@ public class Entities
         this.phyDef = phyDef;
         this.basePhyDef = phyDef;
         this.movSpeed = movSpeed;
+        this.baseMovSpeed = movSpeed;
         this.magAtt = magAtt;
         this.baseMagAtt = magAtt;
         this.phyAtt = phyAtt;

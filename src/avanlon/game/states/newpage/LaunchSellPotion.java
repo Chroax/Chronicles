@@ -1,7 +1,8 @@
-package avanlon.game.states;
+package avanlon.game.states.newpage;
 
 import avanlon.framework.gui.WindowManager;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.inventorystates.InvPotionMenu;
 
 import javax.swing.*;
 

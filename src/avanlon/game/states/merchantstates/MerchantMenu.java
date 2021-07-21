@@ -1,10 +1,12 @@
-package avanlon.game.states;
+package avanlon.game.states.merchantstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
 import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
+import avanlon.game.states.mainstates.PlayMenu;
+import avanlon.game.states.newpage.LaunchBuyPage;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
