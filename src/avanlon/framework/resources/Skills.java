@@ -17,7 +17,7 @@ public class Skills
                     "5 SKILL_PALADIN_5 | Rampage ? Player gets bonus +10% Physical Attack > 2",
                     "6 SKILL_PALADIN_6 | Blood Slash ? Player gives damage equals to 130% of Physical Attack > 2",
                     "7 SKILL_PALADIN_7 | Fire Pierce ? Enemy MP decreased by 8% > 4",
-                    "8 SKILL_PALADIN_8 | Sonic Blade ? Player gives damage equals to 80% of Magic Attack > 4",
+                    "8 SKILL_PALADIN_8 | Sonic Blade ? Player gives damage equals to 180% of Phy Attack > 4",
                     "9 SKILL_PALADIN_9 | Spiral Air ? Enemy Movement Speed decreased by 10% > 4",
                     "10 SKILL_PALADIN_10 | War Cry ? Player gets bonus +15% HP > 5",
                     "11 SKILL_PALADIN_11 | Rage Sword ? Player gets bonus +20% Physical Attack > 6",

@@ -8,18 +8,16 @@ import avanlon.game.states.dungeonstates.BattleMonster;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Stack;
 
-public class LaunchBattleMonster
+public class LaunchBattleMonster2
 {
     public static JFrame frame = new JFrame();
     public int totalMonster;
-    ArrayList <Monster> spawnMob;
+    ArrayList<Monster> spawnMob;
     private Random random = new Random();
 
-    public LaunchBattleMonster(Player player, int totalMonster, int level)
+    public LaunchBattleMonster2(Player player, int totalMonster, int level)
     {
         spawnMob = new ArrayList<>();
         for (int i = 0; i < totalMonster; i++)

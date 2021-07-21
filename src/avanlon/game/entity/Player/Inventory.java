@@ -20,9 +20,6 @@ public class Inventory
     {
         this.maxCapacity = capacity;
         this.capacity = 0;
-        addItems("Weapon", Items.MAJESTY, 3);
-        addItems("Armor", Items.BRIGANDINE_ARMOR, 3);
-        addItems("Potion", Items.HEALING_POTION, 3);
     }
 
     public int addItems(String type, Object item, int total)

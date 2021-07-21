@@ -15,7 +15,7 @@ public class Textures
     private static HashMap<String, BufferedImage> spritesPotion;
     private static HashMap<String, BufferedImage> spritesIcon;
     private static HashMap<String, BufferedImage> spritesSkill;
-
+    private static HashMap<String, BufferedImage> spritesMonster;
 
     public static void init()
     {
@@ -26,6 +26,7 @@ public class Textures
         spritesPotion = new HashMap<>();
         spritesIcon = new HashMap<>();
         spritesSkill = new HashMap<>();
+        spritesMonster = new HashMap<>();
 
         File folderScreen = new File("res/textures/Screen");
         File folderEntities = new File("res/textures/Entities");
@@ -34,6 +35,7 @@ public class Textures
         File folderPotion = new File("res/textures/Potion");
         File folderIcon = new File("res/textures/Icon");
         File folderSkill = new File("res/textures/Skill");
+        File folderMonster = new File("res/textures/Monster");
 
         putFile(folderScreen, "Screen");
         putFile(folderEntities, "Entities");
@@ -42,6 +44,7 @@ public class Textures
         putFile(folderPotion, "Potion");
         putFile(folderIcon, "Icon");
         putFile(folderSkill, "Skill");
+        putFile(folderMonster, "Monster");
 
         System.out.println("[Utils][Textures]: Finished reading sprite files");
     }
@@ -152,6 +155,20 @@ public class Textures
                 }
             }
         }
+        else if (type.equals("Monster"))
+        {
+            for(File file : folder.listFiles())
+            {
+                try
+                {
+                    spritesMonster.put(file.getName().replaceAll(".png", ""), ImageIO.read(file));
+                }
+                catch (IOException e)
+                {
+                    System.err.println("[Utils][Textures]: Exception reading " + file.getName());
+                }
+            }
+        }
     }
 
     public static BufferedImage getSprite(String name, String type)
@@ -165,6 +182,7 @@ public class Textures
                     case "Potion" -> spritesPotion.get(name);
                     case "Icon" -> spritesIcon.get(name);
                     case "Skill" -> spritesSkill.get(name);
+                    case "Monster" -> spritesMonster.get(name);
                     default -> null;
                 };
 

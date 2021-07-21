@@ -3,15 +3,18 @@ package avanlon.game.entity.Player;
 import avanlon.framework.resources.Textures;
 import avanlon.framework.resources.Items;
 import avanlon.game.entity.Entities;
+import avanlon.game.entity.Monster;
 import avanlon.game.items.Armor;
 import avanlon.game.items.Item;
 import avanlon.game.items.Weapon;
 
 import javax.swing.*;
 import java.util.Locale;
+import java.util.Random;
 
 public class Player extends Entities
 {
+    private int dungeonLevel;
     private int HPBuff;
     private int MPBuff;
     private int magDefBuff;
@@ -33,7 +36,7 @@ public class Player extends Entities
     private Skill [] mySkill;
     public Inventory myInventory;
 
-    public Player(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int crit, int magAtt, int phyAtt, String jobClass, int maxSkillEquip)
+    public Player(String name, int HP, int MP, int magDef, int phyDef, int movSpeed, int crit, int magAtt, int phyAtt, String jobClass, int maxSkillEquip, int dungeonLevel)
     {
         super(name, HP, MP, magDef, phyDef, movSpeed, magAtt, phyAtt);
         this.HPBuff = 0;
@@ -54,6 +57,7 @@ public class Player extends Entities
         this.playerClass = jobClass;
         this.mySkill = new Skill[maxSkillEquip];
         this.myInventory = new Inventory(20);
+        this.dungeonLevel = dungeonLevel;
     }
 
     public String getPlayerClass()
@@ -91,6 +95,17 @@ public class Player extends Entities
     public Armor getMyArmor()
     {
         return this.myArmor;
+    }
+    public int getDungeonLevel()
+    {
+        return this.dungeonLevel;
+    }
+
+    public void plusDungeonLevel()
+    {
+        this.dungeonLevel += 1;
+        if(this.dungeonLevel > 3)
+            this.dungeonLevel = 3;
     }
     public void minPointSkill()
     {
@@ -233,15 +248,19 @@ public class Player extends Entities
                 this.gold -= gold;
         }
     }
-    public void useItem(String type, Object item, int total, boolean isInv)
+    public boolean useItem(String type, Object item, int total, boolean isInv)
     {
+        boolean check = false;
         if(type.equals("Weapon"))
         {
             Weapon weapon = (Weapon) item;
             if(weapon.getWeaponClass().toLowerCase(Locale.ROOT).equals(this.playerClass.toLowerCase(Locale.ROOT)))
             {
                 if(this.myInventory.useItem(type, item, total, isInv))
+                {
                     equipWeapon(weapon);
+                    check = true;
+                }
             }
             else
                 JOptionPane.showMessageDialog(null, "Doesn't match your job class", "Equip Weapon", JOptionPane.WARNING_MESSAGE);
@@ -279,9 +298,11 @@ public class Player extends Entities
                                 }
                             }
                 }
+                check = true;
             }
         }
         addBuff();
+        return check;
     }
     public void addBuff()
     {
@@ -297,5 +318,86 @@ public class Player extends Entities
             this.MP = this.HPMax;
         this.movSpeed = this.baseMovSpeed + moveSpeedBuff;
         this.crit = this.baseCrit + critBuff;
+    }
+    public void giveDamage(Monster monster)
+    {
+        int monsterMagDeff = monster.getMagDef();
+        int monsterPhyDef = monster.getPhyDef();
+        int monsterSpeed = monster.getMovSpeed();
+        int totalAtt = (int) (this.magAtt - (0.1 * monsterMagDeff) + this.phyAtt - (0.1 * monsterPhyDef));
+        int crit = this.crit + (random.nextInt(150 - this.crit));
+        if (crit >= 100)
+            totalAtt *= 2;
+        int dodge = monsterSpeed - this.movSpeed + (random.nextInt(150 - monsterSpeed));
+        if(dodge >= 100)
+            totalAtt = 0;
+        if(totalAtt > monster.getHP())
+            monster.getDamage(monster.getHP());
+        else
+            monster.getDamage(totalAtt);
+    }
+    public void addExpAndGold(Monster monster)
+    {
+        int monsterLevel = monster.getLevel();
+        int expDrop = monster.getExpDrop();
+        int goldDrop = monster.getGoldDrop();
+        int diffLevel = this.level - monster.getLevel();
+        if(diffLevel == 0)
+        {
+            this.gold += goldDrop;
+            this.exp += expDrop;
+        }
+        else if(diffLevel < 0)
+        {
+            goldDrop += Math.abs(diffLevel * (random.nextInt(20)+10));
+            expDrop += Math.abs(diffLevel * (random.nextInt(20)+10));
+            this.gold += goldDrop;
+            this.exp += expDrop;
+        }
+        else
+        {
+            goldDrop -= Math.abs(diffLevel * (random.nextInt(5)+5));
+            expDrop -= Math.abs(diffLevel * (random.nextInt(5)+5));
+            if (goldDrop < 0)
+                goldDrop = 0;
+            if (expDrop < 0)
+                expDrop = 0;
+            this.gold += goldDrop;
+            this.exp += expDrop;
+        }
+        if(this.exp > baseExp)
+            levelUp();
+    }
+    public void levelUp()
+    {
+        while(this.exp >= this.baseExp)
+        {
+            this.exp -= this.baseExp;
+        }
+    }
+    public void statLevelUp()
+    {
+        this.level++;
+        this.HPMax = this.HPMax + (int) (0.25 * this.HPMax);
+        this.MPMax = this.MPMax + (int) (0.08 * this.MPMax);
+        this.baseMagDef += 2;
+        this.basePhyDef += 3;
+        this.baseMovSpeed += 3;
+        this.baseCrit += 2;
+        this.baseExp = baseExp + (int) (1.5 * baseExp);
+
+        switch (this.playerClass)
+        {
+            case "PALADIN" -> basePhyAtt += 3;
+            case "WIZARD" -> baseMagAtt += 4;
+            case "ARCHER" ->
+                    {
+                        basePhyAtt += 2;
+                        baseMagAtt += 2;
+                    }
+        }
+        this.pointSkill += 3;
+
+        addBuff();
     }
 }

@@ -1,5 +1,7 @@
 package avanlon.game.entity;
 
+import java.util.Random;
+
 public class Entities
 {
     protected final String name;
@@ -17,6 +19,7 @@ public class Entities
     protected int basePhyAtt;
     protected int movSpeed;
     protected int baseMovSpeed;
+    protected Random random = new Random();
 
     public Entities(String name, int HP, int MP, int magDef, int PhysicalDef, int movSpeed, int magAtt, int PhysicalAtt)
     {
@@ -76,5 +79,17 @@ public class Entities
     public int getMovSpeed()
     {
         return this.movSpeed;
+    }
+    public void getDamage(int damage)
+    {
+        this.HP -= damage;
+    }
+    public void useMP(int MP)
+    {
+        this.MP -= MP;
+    }
+    public boolean isDie()
+    {
+        return this.HP == 0;
     }
 }

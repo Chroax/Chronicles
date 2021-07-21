@@ -2,11 +2,13 @@ package avanlon.game.states.mainstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
+import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
-import avanlon.game.states.PlayState;
+import avanlon.game.states.dungeonstates.PlayState;
 import avanlon.game.states.charachterstates.CharacterMenu;
 import avanlon.game.states.merchantstates.MerchantMenu;
+import avanlon.game.states.newpage.LaunchEnd;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,9 +35,9 @@ public class PlayMenu extends GameState
         this.zoomLevel = 2;
         switch (playerClass)
         {
-            case 0 -> player = new Player("Player", 250, 100, 100, 100, 100, 60, 0, 150, "PALADIN", totalMaxSkill);
-            case 1 -> player = new Player("Player", 225, 200, 20, 50, 75, 40, 100, 0, "WIZARD", totalMaxSkill);
-            case 2 -> player = new Player("Player", 200, 100, 30, 40, 300, 100, 50, 75, "ARCHER", totalMaxSkill);
+            case 0 -> player = new Player("Player", 1500, 100, 100, 100, 100, 60, 0, 200, "PALADIN", totalMaxSkill, 1);
+            case 1 -> player = new Player("Player", 1000, 200, 20, 50, 75, 40, 200, 0, "WIZARD", totalMaxSkill, 1);
+            case 2 -> player = new Player("Player", 900, 100, 30, 40, 300, 100, 100, 100, "ARCHER", totalMaxSkill, 1);
         }
     }
 
@@ -85,7 +87,8 @@ public class PlayMenu extends GameState
                         super.gameStateManager.stackState(new MerchantMenu(gameStateManager, player));
                         break;
                     case EXIT:
-                        System.exit(0);
+                        new LaunchEnd();
+                        WindowManager.frame.setVisible(false);
                         break;
                 }
                 break;

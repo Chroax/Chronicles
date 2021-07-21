@@ -1,16 +1,20 @@
-package avanlon.game.states;
+package avanlon.game.states.dungeonstates;
 
 import avanlon.framework.gamestates.GameState;
 import avanlon.framework.gamestates.GameStateManager;
+import avanlon.framework.gui.WindowManager;
 import avanlon.framework.resources.Textures;
 import avanlon.game.entity.Player.Player;
-import avanlon.game.states.charachterstates.CharacterMenu;
 import avanlon.game.states.mainstates.PlayMenu;
-import avanlon.game.states.merchantstates.MerchantMenu;
+import avanlon.game.states.newpage.LaunchBattleMonster;
+import avanlon.game.states.newpage.LaunchBattleMonster2;
+import avanlon.game.states.newpage.LaunchBattleMonster3;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 public class PlayState extends GameState
 {
@@ -22,6 +26,7 @@ public class PlayState extends GameState
     private static final String BACK = "Back";
     private int selected;
     private int zoomLevel;
+    private Random random = new Random();
 
     public PlayState(GameStateManager manager, Player player)
     {
@@ -54,29 +59,49 @@ public class PlayState extends GameState
     {
         switch(keyCode)
         {
-            case KeyEvent.VK_UP, KeyEvent.VK_W:
-                if(this.selected > 0) this.selected--;
-                break;
-            case KeyEvent.VK_DOWN, KeyEvent.VK_S:
-                if(this.selected < this.optionsMenu.length-1) this.selected++;
-                break;
-            case KeyEvent.VK_ENTER:
-                switch(this.optionsMenu[selected])
-                {
-                    case CAVE:
-//                        super.gameStateManager.stackState(new PlayState(gameStateManager, player));
-                        break;
-                    case FOREST:
-//                        super.gameStateManager.stackState(new CharacterMenu(gameStateManager, player));
-                        break;
-                    case CASTLE:
-//                        super.gameStateManager.stackState(new MerchantMenu(gameStateManager, player));
-                        break;
-                    case BACK:
-                        super.gameStateManager.stackState(new PlayMenu(gameStateManager, player));
-                        break;
-                }
-                break;
+            case KeyEvent.VK_UP, KeyEvent.VK_W ->
+                    {
+                        if(this.selected > 0) this.selected--;
+                    }
+            case KeyEvent.VK_DOWN, KeyEvent.VK_S ->
+                    {
+                        if(this.selected < this.optionsMenu.length-1) this.selected++;
+                    }
+            case KeyEvent.VK_ENTER ->
+                    {
+                        switch(this.optionsMenu[selected])
+                        {
+                            case CAVE ->
+                                    {
+                                        int generateMonster = random.nextInt(3) + 2;
+                                        LaunchBattleMonster battleMonster = new LaunchBattleMonster(player, generateMonster, 1);
+                                        WindowManager.frame.setVisible(false);
+                                    }
+                            case FOREST ->
+                                    {
+                                        if (player.getDungeonLevel() < 2)
+                                            JOptionPane.showMessageDialog(null, "Not Yet Unlocked this Forest Dungeon", "Dungeon Message", JOptionPane.WARNING_MESSAGE);
+                                        else
+                                        {
+                                            int generateMonster = random.nextInt(4) + 3;
+                                            new LaunchBattleMonster2(player, generateMonster, 2);
+                                            WindowManager.frame.setVisible(false);
+                                        }
+                                    }
+                            case CASTLE ->
+                                    {
+                                        if (player.getDungeonLevel() < 3)
+                                            JOptionPane.showMessageDialog(null, "Not Yet Unlocked this Castle Dungeon", "Dungeon Message", JOptionPane.WARNING_MESSAGE);
+                                        else
+                                        {
+                                            int generateMonster = random.nextInt(5) + 4;
+                                            new LaunchBattleMonster3(player, generateMonster, 3);
+                                            WindowManager.frame.setVisible(false);
+                                        }
+                                    }
+                            case BACK -> super.gameStateManager.stackState(new PlayMenu(gameStateManager, player));
+                        }
+                    }
         }
     }
 

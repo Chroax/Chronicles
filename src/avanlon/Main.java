@@ -2,6 +2,7 @@ package avanlon;
 
 import avanlon.framework.Engine;
 import avanlon.framework.resources.Items;
+import avanlon.framework.resources.Monsters;
 import avanlon.framework.resources.Skills;
 import avanlon.framework.resources.Textures;
 
@@ -19,6 +20,7 @@ public class Main
                 Textures.init();
                 new Skills();
                 new Items();
+                new Monsters();
                 Engine.init();
                 Engine.start();
             }

@@ -13,6 +13,9 @@ public class WindowManager
     public static JFrame frame;
     public static JPanel panel;
     public static boolean openBuyMenu;
+    public static boolean openCaveMenu1;
+    public static boolean openCaveMenu2;
+    public static boolean openCaveMenu3;
     public static final int WIDTH = 986;
     public static final int HEIGHT = 555;
 
@@ -20,6 +23,9 @@ public class WindowManager
     {
         ImageIcon icon = new ImageIcon("res/textures/SCREEN/TITLESCREEN.png");
         openBuyMenu = false;
+        openCaveMenu1 = false;
+        openCaveMenu2 = false;
+        openCaveMenu3 = false;
         frame = new JFrame("AVANLON RPG GAME");
         frame.setBounds(70, 70, 0, 0);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
