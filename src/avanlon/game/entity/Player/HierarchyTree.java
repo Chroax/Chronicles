@@ -60,10 +60,9 @@ public class HierarchyTree
 
     public void buildHierarchyTree(Skill root)
     {
-        Skill skill = root;
-        java.util.List<Skill> subs = getSubsById(skill.skillId);
+        java.util.List<Skill> subs = getSubsById(root.skillId);
 
-        skill.subordinates = subs;
+        root.subordinates = subs;
 
         if (subs.size() == 0)
             return;
@@ -73,7 +72,7 @@ public class HierarchyTree
 
     private java.util.List<Skill> getSubsById(int rootId)
     {
-        java.util.List<Skill> subs = new ArrayList<Skill>();
+        java.util.List<Skill> subs = new ArrayList<>();
 
         for (Skill em : skills.values())
         {

@@ -56,35 +56,34 @@ public class Inventory
 
     private void addWeapon(Weapon weapon, int total)
     {
-        if(this.invWeaponList.get(weapon) == null)
-            this.invWeaponList.put(weapon, total);
+        if(this.invWeaponList.get(weapon) == null) {
+        }
         else
         {
             total += this.invWeaponList.get(weapon);
-            this.invWeaponList.put(weapon, total);
         }
+        this.invWeaponList.put(weapon, total);
     }
 
     private void addArmor(Armor armor, int total)
     {
-        if(this.invArmorList.get(armor) == null)
-            this.invArmorList.put(armor, total);
+        if(this.invArmorList.get(armor) == null) {
+        }
         else
         {
             total += this.invArmorList.get(armor);
-            this.invArmorList.put(armor, total);
         }
+        this.invArmorList.put(armor, total);
     }
 
     private void addPotion(Item potion, int total)
     {
-        if(this.invPotionList.get(potion) == null)
-            this.invPotionList.put(potion, total);
+        if(this.invPotionList.get(potion) == null) {}
         else
         {
             total += this.invPotionList.get(potion);
-            this.invPotionList.put(potion, total);
         }
+        this.invPotionList.put(potion, total);
     }
 
     public boolean useItem(String type, Object item, int total, boolean isInv)

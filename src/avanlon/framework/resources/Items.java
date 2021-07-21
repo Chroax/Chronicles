@@ -22,7 +22,7 @@ public class Items
     public static final Armor BASIC_ARMOR = new Armor("BASIC_ARMOR", "", "Basic Armor", 0, 0, 0, "Heavy Armor");
     public static final Armor LEATHER_ARMOR = new Armor("LEATHER_ARMOR", "Common", "Leather Armor", 100, 30, 0, "Heavy Armor");
     public static final Armor WARRIOR_ARMOR = new Armor("WARRIOR_ARMOR", "Common", "Warrior Armor", 200, 45, 0, "Heavy Armor");
-    public static final Armor BRIGANDINE_ARMOR = new Armor("BRIGANDINE_ARMOR", "Rare", "Brigandine Armor", 450, 0, 65, "Heavy Armor");;
+    public static final Armor BRIGANDINE_ARMOR = new Armor("BRIGANDINE_ARMOR", "Rare", "Brigandine Armor", 450, 0, 65, "Heavy Armor");
     public static final Armor ICE_LOYS = new Armor("ICE_LOYS", "Rare", "Ice Loys", 450, 65, 0, "Cloak");
     public static final Armor SYNCTO = new Armor("SYNCTO", "Epic", "Syncto", 600, 100, 0, "Cloak");
     public static final Armor EMERALD_CLOAK = new Armor("EMERALD_CLOAK", "Epic", "Emerald Cloak", 750, 120, 0, "Cloak");

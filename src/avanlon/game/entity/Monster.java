@@ -67,9 +67,6 @@ public class Monster extends Entities
         int dodge = playerSpeed - this.movSpeed + (random.nextInt(150 - playerSpeed));
         if(dodge >= 100)
             totalAtt = 0;
-        if(totalAtt > player.getHP())
-            player.getDamage(player.getHP());
-        else
-            player.getDamage(totalAtt);
+        player.getDamage(Math.min(totalAtt, player.getHP()));
     }
 }

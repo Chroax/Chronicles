@@ -149,7 +149,12 @@ public class BattleMonster extends JPanel implements ActionListener
             if (player.isDie())
             {
                 JOptionPane.showMessageDialog(null, "YOU DIE", "LOSE MESSAGE", JOptionPane.WARNING_MESSAGE);
-                LaunchBattleMonster.frame.dispose();
+                if(!WindowManager.openCaveMenu1)
+                    LaunchBattleMonster.frame.dispose();
+                else if(!WindowManager.openCaveMenu2)
+                    LaunchBattleMonster2.frame.dispose();
+                else if(!WindowManager.openCaveMenu3)
+                    LaunchBattleMonster3.frame.dispose();
                 WindowManager.frame.setVisible(true);
             }
         }

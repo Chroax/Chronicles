@@ -115,16 +115,16 @@ public class Player extends Entities
     }
     public void equipWeapon(Weapon weapon)
     {
-        if(this.myWeapon == null)
-            addWeaponBuff(weapon);
+        if(this.myWeapon == null) {
+        }
         else
         {
             this.magAttBuff -= myWeapon.getMagAttack();
             this.phyAttBuff -= myWeapon.getPhyAttack();
             this.phyDefBuff -= myWeapon.getPhyDef();
             myInventory.addItems("Weapon", myWeapon, 1);
-            addWeaponBuff(weapon);
         }
+        addWeaponBuff(weapon);
     }
 
     private void addWeaponBuff(Weapon weapon)
@@ -137,21 +137,14 @@ public class Player extends Entities
 
     public void equipArmor(Armor armor)
     {
-        if(this.myArmor == null)
-        {
-            this.myArmor = armor;
-            this.magDefBuff += myArmor.getMagDef();
-            this.phyDefBuff += myArmor.getPhyDef();
-        }
-        else
-        {
+        if (this.myArmor != null) {
             this.magDefBuff -= myArmor.getMagDef();
             this.phyDefBuff -= myArmor.getPhyDef();
             myInventory.addItems("Armor", myArmor, 1);
-            this.myArmor = armor;
-            this.magDefBuff += myArmor.getMagDef();
-            this.phyDefBuff += myArmor.getPhyDef();
         }
+        this.myArmor = armor;
+        this.magDefBuff += myArmor.getMagDef();
+        this.phyDefBuff += myArmor.getPhyDef();
     }
     public void addSkill(Skill skill, int slot)
     {
@@ -185,10 +178,9 @@ public class Player extends Entities
     }
     public Skill usedSkill(String name)
     {
-        for (int i = 0; i < mySkill.length; i++)
-        {
-            if(mySkill[i].getDisplayName().equals(name))
-                return mySkill[i];
+        for (Skill skill : mySkill) {
+            if (skill.getDisplayName().equals(name))
+                return skill;
         }
         return null;
     }
@@ -331,10 +323,7 @@ public class Player extends Entities
         int dodge = monsterSpeed - this.movSpeed + (random.nextInt(150 - monsterSpeed));
         if(dodge >= 100)
             totalAtt = 0;
-        if(totalAtt > monster.getHP())
-            monster.getDamage(monster.getHP());
-        else
-            monster.getDamage(totalAtt);
+        monster.getDamage(Math.min(totalAtt, monster.getHP()));
     }
     public void addExpAndGold(Monster monster)
     {

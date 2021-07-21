@@ -30,13 +30,13 @@ public class Entities
         this.MPMax = MP;
         this.magDef = magDef;
         this.baseMagDef = magDef;
-        this.phyDef = phyDef;
+        this.phyDef = PhysicalDef;
         this.basePhyDef = phyDef;
         this.movSpeed = movSpeed;
         this.baseMovSpeed = movSpeed;
         this.magAtt = magAtt;
         this.baseMagAtt = magAtt;
-        this.phyAtt = phyAtt;
+        this.phyAtt = PhysicalAtt;
         this.basePhyAtt = phyAtt;
     }
 
